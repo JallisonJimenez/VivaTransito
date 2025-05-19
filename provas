@@ -1,0 +1,49 @@
+import React from "react";
+import Wrapper from "../components/Wrapper";
+import { ClipboardCheck } from "lucide-react";
+
+const Simulados = () => {
+    const simulados = [
+        {
+            titulo: "Direção Defensiva",
+            resultado: "3/20 Acertos",
+        },
+        {
+            titulo: "Mecânica Básica",
+            resultado: "14/20 Acertos",
+        },
+        {
+            titulo: "Legislação de transito",
+            resultado: "Sem Resultados",
+        },
+    ];
+
+    return (
+        <div className="bg-white text-black">
+            <Wrapper className="px-6 py-10">
+                <div className="mx-auto flex max-w-6xl flex-wrap justify-center gap-8">
+                    {simulados.map((simulado, index) => (
+                        <div
+                            key={index}
+                            className="flex w-[250px] flex-col items-center justify-between rounded-lg bg-white p-4 text-center shadow-md"
+                        >
+                            <h2 className="text-lg font-bold">{simulado.titulo}</h2>
+                            <p className="mb-4 mt-2 text-sm">
+                                Último Resultado: <br />
+                                {simulado.resultado}
+                            </p>
+
+                            <ClipboardCheck className="mb-4 h-20 w-20 text-gray-800" />
+
+                            <button className="mt-auto rounded-md bg-gray-300 px-6 py-2 font-semibold hover:bg-gray-400">
+                                Fazer
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            </Wrapper>
+        </div>
+    );
+};
+
+export default Simulados;
