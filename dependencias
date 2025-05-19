@@ -1,0 +1,37 @@
+Tailwind CSS (estilização)
+bash
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+Edite o tailwind.config.js:
+
+js
+content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"]
+No seu src/index.css (ou equivalente):
+
+css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+2. Lucide React (ícones)
+bash
+npm install lucide-react
+Exemplo de uso:
+
+tsx
+import { ClipboardCheck } from "lucide-react";
+3. Recharts (gráficos de pizza)
+bash
+npm install recharts
+Exemplo de uso:
+
+tsx
+import { PieChart, Pie, Cell, Tooltip } from "recharts";
+4. React Router DOM (caso use rotas, como para “Voltar” ou “Revisar”)
+bash
+npm install react-router-dom
+Exemplo:
+
+tsx
+import { useNavigate } from "react-router-dom";
+const navigate = useNavigate();
+<button onClick={() => navigate(-1)}>Voltar</button>
