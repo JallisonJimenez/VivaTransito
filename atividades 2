@@ -1,0 +1,54 @@
+import React from "react";
+import Wrapper from "../components/Wrapper";
+
+const Atividades = () => {
+    return (
+        <div className="bg-white text-black">
+            <Wrapper className="w-full px-4 py-6">
+                <div className="mx-auto flex w-[95%] max-w-[1200px] gap-4">
+                    {/* Sidebar Sumário */}
+                    <aside className="w-1/3 min-w-[200px] max-w-[300px] bg-gray-300 p-4">
+                        <h2 className="mb-4 text-xl font-bold">Sumario</h2>
+                        <ul className="space-y-2">
+                            <li>
+                                <p className="font-semibold">Atividade 01</p>
+                                <ul className="ml-4 list-disc space-y-1 text-sm">
+                                    <li>Regras de Transito</li>
+                                    <li>Exercícios</li>
+                                    <li>Simulados</li>
+                                </ul>
+                            </li>
+                            {["Atividade 02", "Atividade 03", "Atividade 04", "Atividade 05"].map((atividade) => (
+                                <li key={atividade}>{atividade}</li>
+                            ))}
+                        </ul>
+                    </aside>
+
+                    {/* Conteúdo de atividades */}
+                    <main className="flex-1 bg-gray-400 p-6 text-black">
+                        <div className="space-y-4">
+                            {/* Atividade 01 com conteúdo */}
+                            <div>
+                                <h3 className="text-xl font-bold">Atividade 01</h3>
+                                <div className="ml-4 mt-2 space-y-1 bg-gray-200 p-3">
+                                    <p>Regras de Transito</p>
+                                    <p>Exercícios</p>
+                                    <p>Simulados</p>
+                                </div>
+                            </div>
+
+                            {/* Atividades seguintes */}
+                            {["Atividade 02", "Atividade 03", "Atividade 04", "Atividade 05"].map((atividade) => (
+                                <div key={atividade}>
+                                    <h3 className="text-xl font-bold">{atividade}</h3>
+                                </div>
+                            ))}
+                        </div>
+                    </main>
+                </div>
+            </Wrapper>
+        </div>
+    );
+};
+
+export default Atividades;
