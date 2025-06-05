@@ -2,52 +2,54 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import React from 'react';
 
-
 export default function Home() {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
-
-  
 
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
       <div className="bg-gray-400 flex items-center justify-between p-4">
-        <div className="flex items-center gap-2 w-1/2">
-          <div className="bg-white rounded px-2 py-1 flex items-center w-full">
-            <span className="mr-2">🔍</span>
-            <input
-              type="text"
-              placeholder="Pesquisar..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="bg-transparent outline-none w-full"
-            />
-            {search && (
-              <button onClick={() => setSearch('')}>❌</button>
-            )}
-          </div>
+        {/* Campo de pesquisa */}
+        <div className="flex items-center bg-white rounded-md px-3 py-2 w-1/2 max-w-md border border-black">
+          <span className="mr-2 text-xl">🔍</span>
+          <input
+            type="text"
+            placeholder="Pesquisar..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="bg-transparent outline-none w-full"
+          />
+          {search && (
+            <button onClick={() => setSearch('')} className="ml-2 text-xl">❌</button>
+          )}
         </div>
 
-        <div className="flex items-center gap-2">
-          <button onClick={() => navigate('/login')}>Entrar</button>
-          <div
-            className="w-10 h-10 rounded-full border border-black flex items-center justify-center cursor-pointer"
+        {/* Botões de login */}
+        <div className="flex items-center gap-4">
+          <button
             onClick={() => navigate('/login')}
+            className="bg-white text-black border border-black rounded px-4 py-1 hover:bg-gray-200"
           >
-            <span className="text-2xl">👤</span>
+            Entrar
+          </button>
+          <div
+            onClick={() => navigate('/login')}
+            className="w-10 h-10 border border-black rounded-full flex items-center justify-center text-2xl cursor-pointer"
+          >
+            👤
           </div>
         </div>
       </div>
 
-      {/* Body */}
-      <div className="flex flex-col md:flex-row justify-center items-start gap-6 p-8">
+      {/* Conteúdo principal */}
+      <div className="max-w-screen-lg mx-auto mt-12 px-4 grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
         {/* Lado Esquerdo */}
-        <div className="flex flex-col gap-4 w-full md:w-1/3">
+        <div className="flex flex-col gap-4">
           {['Regras de Transito', 'Direção Defensiva', 'Sinalização', 'Órgãos de Transito'].map((text) => (
             <button
               key={text}
-              className="bg-gray-300 rounded px-4 py-3 text-left text-lg hover:bg-gray-400"
+              className="bg-gray-300 text-black px-6 py-4 rounded-md text-lg text-left hover:bg-gray-400 transition"
             >
               {text}
             </button>
@@ -55,24 +57,24 @@ export default function Home() {
         </div>
 
         {/* Lado Direito */}
-        <div className="grid grid-cols-2 gap-4 w-full md:w-2/3">
+        <div className="grid grid-cols-2 gap-4">
           <button
             onClick={() => navigate('/atividades')}
-            className="bg-red-400 text-white font-bold text-xl rounded px-4 py-10 hover:bg-red-500"
+            className="bg-red-400 text-white font-bold text-xl rounded-md px-4 py-10 hover:bg-red-500"
           >
             Atividades
           </button>
           <button
-            onClick={() => navigate('/progresso')}
-            className="bg-red-600 text-white font-bold text-xl rounded px-4 py-16 hover:bg-red-700 col-span-1 row-span-2"
-          >
-            Meu <br /> Progresso
-          </button>
-          <button
             onClick={() => navigate('/provas')}
-            className="bg-orange-600 text-white font-bold text-xl rounded px-4 py-10 hover:bg-orange-700"
+            className="bg-orange-600 text-white font-bold text-xl rounded-md px-4 py-10 hover:bg-orange-700"
           >
             Minhas <br /> Provas
+          </button>
+          <button
+            onClick={() => navigate('/progresso')}
+            className="bg-red-600 text-white font-bold text-2xl rounded-md px-4 py-20 hover:bg-red-700 col-span-2"
+          >
+            Meu <br /> Progresso
           </button>
         </div>
       </div>
