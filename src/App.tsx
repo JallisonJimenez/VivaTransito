@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import Provas from './pages/Provas';
 import Cadastro from './pages/Cadastro';
 import Progresso from './pages/Progresso';
+import React from 'react';
 
 export default function App() {
   return (

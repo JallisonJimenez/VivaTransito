@@ -2,6 +2,7 @@
 import { PieChart, Pie, Cell, Legend, } from 'recharts';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button.tsx'; // ajuste conforme a estrutura
+import React from 'react';
 
 import {
     LineChart,

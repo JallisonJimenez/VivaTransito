@@ -1,6 +1,7 @@
 // src/pages/Cadastro.tsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import React from 'react';
 
 export default function Cadastro() {
   const navigate = useNavigate();

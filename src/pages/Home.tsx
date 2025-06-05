@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import React from 'react';
+
 
 export default function Home() {
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ export default function Home() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button onClick={() => navigate('/login')}>Entrar</Button>
+          <button onClick={() => navigate('/login')}>Entrar</button>
           <div
             className="w-10 h-10 rounded-full border border-black flex items-center justify-center cursor-pointer"
             onClick={() => navigate('/login')}
