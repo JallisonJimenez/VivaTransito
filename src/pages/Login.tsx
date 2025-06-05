@@ -11,7 +11,7 @@ export default function Login() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (username === 'asd' && password === '123') {
-      navigate('/');
+      navigate("/Home_adm");
     } else {
       alert('Usuário ou senha incorretos');
     }
@@ -21,7 +21,7 @@ export default function Login() {
     <div className="min-h-screen bg-white p-6">
     <div className="flex justify-end">
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => navigate("/")}
           className="mb-4 px-4 py-2 border rounded hover:bg-gray-100"
         >
           Voltar

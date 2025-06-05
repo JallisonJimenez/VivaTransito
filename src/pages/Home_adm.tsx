@@ -70,15 +70,22 @@ export default function Home() {
           >
             Minhas <br /> Provas
           </button>
-          <button
-            onClick={() => navigate('/progresso')}
-            className="bg-red-600 text-white font-bold text-xl rounded-md px-4 py-20 hover:bg-red-700 col-span-2"
-          >
-            Meu <br /> Progresso
-          </button>
 
-        </div>
-      </div>
-    </div>
-  );
+<button
+  onClick={() => navigate('/progresso')}
+  className="bg-red-600 text-white font-bold text-xl rounded-md px-4 py-20 hover:bg-red-700 "
+>
+  Meu <br /> Progresso
+</button>
+<button
+  onClick={() => navigate('/criar_atividades')}
+  className="bg-purple-600 text-white font-bold text-xl rounded-md px-4 py-20 hover:bg-purple-700 "
+>
+  Criar <br /> Atividades
+</button>
+
+</div>
+</div>
+</div>
+);
 }
