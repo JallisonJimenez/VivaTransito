@@ -1,6 +1,10 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function CreateActivity() {
+export default
+
+function CreateActivity() {
+   const navigate = useNavigate();
   const [form, setForm] = useState({
     texto: "",
     imagem: null as File | null,
@@ -8,6 +12,8 @@ export default function CreateActivity() {
     respostaCerta: "1",
   });
 
+
+  
   const handleRespostaChange = (index: number, value: string) => {
     const novasRespostas = [...form.respostas];
     novasRespostas[index] = value;
@@ -36,6 +42,16 @@ export default function CreateActivity() {
   };
 
   return (
+    <div className="min-h-screen bg-white p-6">
+    <div className="flex justify-end">
+        <button
+          onClick={() => navigate(-1)}
+          className="mb-4 px-4 py-2 border rounded hover:bg-gray-100"
+        >
+          Voltar
+        </button>
+      </div>
+    
     <div className="max-w-2xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
       <h1 className="text-2xl font-bold mb-6">Criar Nova Atividade</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -101,6 +117,7 @@ export default function CreateActivity() {
           Criar Atividade
         </button>
       </form>
+    </div>
     </div>
   );
 }

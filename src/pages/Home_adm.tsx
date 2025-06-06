@@ -27,14 +27,9 @@ export default function Home() {
 
         {/* Botões de login */}
         <div className="flex items-center gap-4">
-          <button
-            onClick={() => navigate('/login')}
-            className="bg-white text-black border border-black rounded px-4 py-1 hover:bg-gray-200"
-          >
-            Entrar
-          </button>
+
           <div
-            onClick={() => navigate('/login')}
+            
             className="w-10 h-10 border border-black rounded-full flex items-center justify-center text-2xl cursor-pointer"
           >
             👤
