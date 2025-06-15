@@ -20,7 +20,7 @@ export default function App() {
         <Route path="/Cadastro" element={<Cadastro />} />
         <Route path="/Progresso" element={<Progresso />} />
         <Route path="/Home_adm" element={<Home_adm />} />
-        <Route path="Criar_atividades" element={<Criar_atividades />} />
+        <Route path="/Criar_atividades" element={<Criar_atividades />} />
       </Routes>
     </Router>
   );
