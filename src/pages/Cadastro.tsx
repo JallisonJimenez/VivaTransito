@@ -10,6 +10,7 @@ export default function Cadastro() {
   const [foto, setFoto] = useState<File | null>(null);
 
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [cpf, setCpf] = useState('');
   const [telefone, setTelefone] = useState('');
@@ -30,6 +31,7 @@ export default function Cadastro() {
       body: JSON.stringify({
         username,
         password,
+        email,
         isOrientador,
         cpf,
         telefone,
@@ -41,7 +43,7 @@ export default function Cadastro() {
       alert('Cadastro realizado!');
       navigate('/');
     } else {
-      alert('Erro no cadastro');
+      alert('Erro no cadastro, usuário ou e-mail já existentes');
     }
   };
   
@@ -79,6 +81,16 @@ export default function Cadastro() {
   required
   value={password}
   onChange={(e) => setPassword(e.target.value)}
+/>
+
+
+<input
+  type="text"
+  placeholder="E-mail"
+  className="w-full p-2 border rounded"
+  required
+  value={email}
+  onChange={(e) => setEmail(e.target.value)}
 />
 
 

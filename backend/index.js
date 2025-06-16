@@ -23,13 +23,13 @@ const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
 
 // Cadastro
 app.post('/cadastro', async (req, res) => {
-  const { username, password, isOrientador, cpf, telefone, foto } = req.body;
+  const { username, password, email, isOrientador, cpf, telefone, foto } = req.body;
 
   try {
     const hash = await bcrypt.hash(password, 10);
     await pool.query(
-      'INSERT INTO usuarios (username, password_hash, is_orientador, cpf, telefone, foto) VALUES ($1, $2, $3, $4, $5, $6)',
-      [username, hash, isOrientador, cpf, telefone, foto]
+      'INSERT INTO usuarios (username, password_hash, email,is_orientador, cpf, telefone, foto) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+      [username, hash, email, isOrientador, cpf, telefone, foto]
     );
     res.status(201).send('Usuário cadastrado');
   } catch (err) {
