@@ -8,14 +8,28 @@ export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (username === 'asd' && password === '123') {
-      navigate("/Home_adm");
+  
+    const res = await fetch('http://localhost:3001/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    });
+  
+    if (res.ok) {
+      const data = await res.json();
+      localStorage.setItem('token', data.token);
+      if (data.isOrientador) {
+        navigate('/Home_adm');
+      } else {
+        navigate('/');
+      }
     } else {
       alert('Usuário ou senha incorretos');
     }
   };
+  
 
   return (
     <div className="min-h-screen bg-white p-6">

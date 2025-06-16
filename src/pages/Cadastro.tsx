@@ -15,17 +15,31 @@ export default function Cadastro() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!termos) {
-      alert('Você precisa concordar com os termos de uso.');
-      return;
+    if (!termos) return alert('Você precisa concordar com os termos.');
+  
+    const res = await fetch('http://localhost:3001/cadastro', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: 'usuarioExemplo',
+        password: 'senhaSegura',
+        isOrientador,
+        cpf: '123.456.789-00',
+        telefone: '11999999999',
+        foto: foto?.name ?? null,
+      }),
+    });
+  
+    if (res.ok) {
+      alert('Cadastro realizado!');
+      navigate('/');
+    } else {
+      alert('Erro no cadastro');
     }
-    // Lógica de envio do formulário aqui
-    alert('Cadastro enviado!');
-    navigate('/');
   };
-
+  
   return (
     <div className="min-h-screen bg-white p-6">
       <div className="flex justify-end">
@@ -43,6 +57,7 @@ export default function Cadastro() {
       >
         <h1 className="text-2xl font-bold text-center mb-4">Cadastro</h1>
 
+const
         <input type="text" placeholder="Usuário" className="w-full p-2 border rounded" required />
 
         <input type="password" placeholder="Senha" className="w-full p-2 border rounded" required />
