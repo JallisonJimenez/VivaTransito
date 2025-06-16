@@ -9,6 +9,11 @@ export default function Cadastro() {
   const [termos, setTermos] = useState(false);
   const [foto, setFoto] = useState<File | null>(null);
 
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [cpf, setCpf] = useState('');
+  const [telefone, setTelefone] = useState('');
+
   const handleFotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFoto(e.target.files[0]);
@@ -23,11 +28,11 @@ export default function Cadastro() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        username: 'usuarioExemplo',
-        password: 'senhaSegura',
+        username,
+        password,
         isOrientador,
-        cpf: '123.456.789-00',
-        telefone: '11999999999',
+        cpf,
+        telefone,
         foto: foto?.name ?? null,
       }),
     });
@@ -57,10 +62,25 @@ export default function Cadastro() {
       >
         <h1 className="text-2xl font-bold text-center mb-4">Cadastro</h1>
 
-const
-        <input type="text" placeholder="Usuário" className="w-full p-2 border rounded" required />
 
-        <input type="password" placeholder="Senha" className="w-full p-2 border rounded" required />
+        <input
+  type="text"
+  placeholder="Usuário"
+  className="w-full p-2 border rounded"
+  required
+  value={username}
+  onChange={(e) => setUsername(e.target.value)}
+/>
+
+<input
+  type="password"
+  placeholder="Senha"
+  className="w-full p-2 border rounded"
+  required
+  value={password}
+  onChange={(e) => setPassword(e.target.value)}
+/>
+
 
         <label className="flex items-center space-x-2">
           <input
@@ -73,9 +93,23 @@ const
 
         <input type="file" accept="application/*" className="w-full" />
 
-        <input type="text" placeholder="CPF" className="w-full p-2 border rounded" required />
+        <input
+  type="text"
+  placeholder="CPF"
+  className="w-full p-2 border rounded"
+  required
+  value={cpf}
+  onChange={(e) => setCpf(e.target.value)}
+/>
 
-        <input type="tel" placeholder="Telefone" className="w-full p-2 border rounded" required />
+<input
+  type="tel"
+  placeholder="Telefone"
+  className="w-full p-2 border rounded"
+  required
+  value={telefone}
+  onChange={(e) => setTelefone(e.target.value)}
+/>
 
         <div className="flex items-center space-x-2">
           <input
