@@ -26,7 +26,7 @@ export default function Atividades() {
   useEffect(() => {
     async function fetchAtividades() {
       try {
-        const res = await fetch('http://localhost:3001/atividades/publica/1');
+        const res = await fetch('http://localhost:3001/atividades');
         if (!res.ok) throw new Error('Erro ao buscar atividades');
         const data: Atividade[] = await res.json();
         setAtividades(data);
@@ -36,6 +36,7 @@ export default function Atividades() {
     }
     fetchAtividades();
   }, []);
+  
 
   const toggleCategoria = (categoria: string) => {
     setAberto(aberto === categoria ? null : categoria);
@@ -67,9 +68,13 @@ export default function Atividades() {
                 {atividades.map((atividade) => (
                   <li key={atividade.id} className="mb-2">
                     <span className="block font-medium">{atividade.nome}</span>
-                    <button className="mt-1 text-sm text-blue-600 underline">
-                      Acessar
-                    </button>
+                    <button
+  onClick={() => navigate(`/responder/${atividade.id}`)}
+  className="mt-1 text-sm text-blue-600 underline"
+>
+  Acessar
+</button>
+
                   </li>
                 ))}
               </ul>
