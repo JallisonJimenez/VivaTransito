@@ -1,17 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const atividadesPorCategoria = {
-  'Direção Defensiva': ['Atividade 1', 'Atividade 2', 'Atividade 3'],
-  'Legislação de Trânsito': ['Atividade 1', 'Atividade 2'],
-  'Sinalização': ['Atividade 1'],
-};
+interface Atividade {
+  id: number;
+  nome: string;
+  categoria: string;
+  dificuldade?: string;
+  // outros campos...
+}
 
 export default function Atividades() {
+  const [atividades, setAtividades] = useState<Atividade[]>([]);
   const [aberto, setAberto] = useState<string | null>(null);
   const navigate = useNavigate();
-  fetch(`http://localhost:3001/atividades/publica/1`)
 
+  // Função para agrupar por categoria
+  const atividadesPorCategoria = atividades.reduce<Record<string, Atividade[]>>((acc, atividade) => {
+    if (!acc[atividade.categoria]) {
+      acc[atividade.categoria] = [];
+    }
+    acc[atividade.categoria].push(atividade);
+    return acc;
+  }, {});
+
+  useEffect(() => {
+    async function fetchAtividades() {
+      try {
+        const res = await fetch('http://localhost:3001/atividades/publica/1');
+        if (!res.ok) throw new Error('Erro ao buscar atividades');
+        const data: Atividade[] = await res.json();
+        setAtividades(data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchAtividades();
+  }, []);
 
   const toggleCategoria = (categoria: string) => {
     setAberto(aberto === categoria ? null : categoria);
@@ -40,9 +64,9 @@ export default function Atividades() {
           {aberto === categoria && (
             <div className="p-4">
               <ul>
-                {atividades.map((atividade, idx) => (
-                  <li key={idx} className="mb-2">
-                    <span className="block font-medium">{atividade}</span>
+                {atividades.map((atividade) => (
+                  <li key={atividade.id} className="mb-2">
+                    <span className="block font-medium">{atividade.nome}</span>
                     <button className="mt-1 text-sm text-blue-600 underline">
                       Acessar
                     </button>

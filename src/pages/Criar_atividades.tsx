@@ -139,14 +139,20 @@ export default function CriarAtividades() {
 
           {/* Categoria */}
           <div>
-            <label className="block font-medium mb-1">Categoria</label>
-            <input
-              type="text"
-              className="w-full border rounded p-2"
-              value={form.categoria}
-              onChange={(e) => setForm({ ...form, categoria: e.target.value })}
-              required
-            />
+            <label className="block font-medium mb-1 mb-2">Categoria</label>
+            <div className="flex flex-wrap gap-2">
+              {["Regras de Trânsito", "Direção", "Legislação"].map((cat) => (
+                <button
+                  type="button"
+                  key={cat}
+                  onClick={() => setForm({ ...form, categoria: cat })}
+                  className={`px-4 py-2 rounded border ${form.categoria === cat ? "bg-blue-600 text-white" : "bg-gray-100"
+                    } hover:bg-blue-100`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Nível de Dificuldade */}
