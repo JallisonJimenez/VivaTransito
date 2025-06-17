@@ -6,7 +6,8 @@ import Provas from './pages/Provas';
 import Cadastro from './pages/Cadastro';
 import Progresso from './pages/Progresso';
 import Home_adm from './pages/Home_adm';
-import Criar_atividades from './pages/Criar_atividades';
+import CriarAtividades from './pages/Criar_atividades';
+import MinhasAtividades from './pages/MinhasAtividades';
 import React from 'react';
 
 export default function App() {
@@ -20,7 +21,8 @@ export default function App() {
         <Route path="/Cadastro" element={<Cadastro />} />
         <Route path="/Progresso" element={<Progresso />} />
         <Route path="/Home_adm" element={<Home_adm />} />
-        <Route path="/Criar_atividades" element={<Criar_atividades />} />
+        <Route path="/Criar_atividades" element={<CriarAtividades />} />
+        <Route path="/minhas-atividades" element={<MinhasAtividades />} />
       </Routes>
     </Router>
   );
