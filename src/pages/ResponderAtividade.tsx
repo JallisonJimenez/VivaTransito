@@ -30,15 +30,21 @@ export default function ResponderAtividade() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        usuarioId: atividade.usuario_id, // ou do token
+        usuarioId: atividade.usuario_id, // ou vindo do token decodificado
         atividadeId: atividade.id,
         resposta: respostaSelecionada,
       }),
     });
-
+    
+    if (res.status === 400) {
+      setResultado("⚠️ Você já respondeu esta atividade.");
+      return;
+    }
+    
     const json = await res.json();
     setResultado(json.acertou ? "✅ Você acertou!" : "❌ Você errou.");
   };
+
 
   if (erro) return <div className="p-6 text-red-600">{erro}</div>;
   if (!atividade) return <div className="p-6">Carregando...</div>;
@@ -82,4 +88,4 @@ export default function ResponderAtividade() {
       )}
     </div>
   );
-}
+  }

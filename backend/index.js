@@ -243,9 +243,25 @@ app.get('/atividades/minhas', autenticarToken, async (req, res) => {
   app.post('/responder', async (req, res) => {
     const { usuarioId, atividadeId, resposta } = req.body;
   
-    const { rows } = await pool.query('SELECT resposta_certa FROM atividades WHERE id = $1', [atividadeId]);
-    const respostaCerta = rows[0]?.resposta_certa;
+    // Verifica se já respondeu
+    const { rows } = await pool.query(
+      'SELECT * FROM resultados WHERE usuario_id = $1 AND atividade_id = $2',
+      [usuarioId, atividadeId]
+    );
   
+    if (rows.length > 0) {
+      return res.status(400).send('Você já respondeu essa atividade.');
+    }
+  
+    // Busca resposta correta
+    const { rows: atividadeRows } = await pool.query(
+      'SELECT resposta_certa FROM atividades WHERE id = $1',
+      [atividadeId]
+    );
+  
+    if (!atividadeRows.length) return res.status(404).send('Atividade não encontrada');
+  
+    const respostaCerta = atividadeRows[0].resposta_certa;
     const acertou = parseInt(resposta) === respostaCerta;
   
     await pool.query(
@@ -255,7 +271,7 @@ app.get('/atividades/minhas', autenticarToken, async (req, res) => {
   
     res.json({ acertou });
   });
-
+  
   app.get('/progresso', autenticarToken, async (req, res) => {
     const usuarioId = req.usuario.id;
   
