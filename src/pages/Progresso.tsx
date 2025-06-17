@@ -111,7 +111,7 @@ export default function Progresso() {
           <Button onClick={() => navigate(-1)}>Voltar</Button>
           <div
             className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center cursor-pointer"
-            onClick={() => navigate("/login")}
+            
           >
             <span className="text-xl">👤</span>
           </div>
@@ -120,11 +120,12 @@ export default function Progresso() {
 
       {/* Conteúdo principal */}
       {erro ? (
-        <p className="text-red-600">{erro}</p>
-      ) : dataSets.length === 0 ? (
-        <p className="text-gray-600">Carregando progresso...</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <p className="text-red-600">{erro}</p>
+) : dataSets.length === 0 ? (
+  <p className="text-gray-600 text-center mt-20">🔎 Nenhum progresso registrado ainda.</p>
+) : (
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
           {dataSets.map(({ title, data }) => (
             <div key={title} className="flex flex-col items-center">
               <h2 className="text-xl font-bold mb-2 text-center">{title}</h2>
