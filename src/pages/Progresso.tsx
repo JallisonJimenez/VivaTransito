@@ -9,6 +9,40 @@ export default function Progresso() {
   const [dataSets, setDataSets] = useState<any[]>([]);
   const [erro, setErro] = useState<string | null>(null);
 
+
+    
+    
+    const revisarAtividades = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return alert("Você precisa estar logado.");
+    
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      const usuarioId = decodedToken.id;
+    
+      try {
+        const res = await fetch(`http://localhost:3001/revisar/${usuarioId}`, {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+    
+        if (!res.ok) {
+          const errorMsg = await res.text();
+          console.error("Erro ao resetar:", errorMsg); // aparece no console do navegador
+          alert("Erro ao reiniciar progresso: " + errorMsg); // mostra ao usuário
+          return;
+        }
+    
+        alert("Progresso reiniciado. Você pode refazer as atividades.");
+        window.location.reload();
+      } catch (err) {
+        console.error("Erro na requisição:", err);
+        alert("Erro de conexão ou servidor.");
+      }
+    };
+  
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -17,9 +51,7 @@ export default function Progresso() {
     }
 
     fetch("http://localhost:3001/progresso", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
         if (!res.ok) throw new Error("Erro ao buscar progresso");
@@ -64,6 +96,7 @@ export default function Progresso() {
       })
       .catch((err) => setErro(err.message));
   }, []);
+
 
   return (
     <div className="min-h-screen p-6 bg-white">
@@ -114,7 +147,15 @@ export default function Progresso() {
                   <Legend />
                 </PieChart>
               </ResponsiveContainer>
-              <Button className="mt-4">Revisar</Button>
+              <Button
+  className="mt-4"
+  onClick={() => revisarAtividades()
+    
+  }
+>
+  Revisar
+</Button>
+
             </div>
           ))}
         </div>

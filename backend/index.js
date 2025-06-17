@@ -272,6 +272,23 @@ app.get('/atividades/minhas', autenticarToken, async (req, res) => {
     res.json({ acertou });
   });
   
+  app.delete('/revisar/:usuarioId', autenticarToken, async (req, res) => {
+    const { usuarioId } = req.params;
+  
+    if (req.usuario.id !== parseInt(usuarioId)) {
+      return res.status(403).send('Acesso negado');
+    }
+  
+    try {
+      await pool.query('DELETE FROM resultados WHERE usuario_id = $1', [usuarioId]);
+      res.send('Respostas resetadas com sucesso');
+    } catch (err) {
+      console.error("Erro ao deletar resultados:", err);
+      res.status(500).send('Erro ao resetar progresso');
+    }
+  });
+  
+
   app.get('/progresso', autenticarToken, async (req, res) => {
     const usuarioId = req.usuario.id;
   
