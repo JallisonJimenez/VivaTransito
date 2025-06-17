@@ -8,6 +8,7 @@ import Progresso from './pages/Progresso';
 import Home_adm from './pages/Home_adm';
 import CriarAtividades from './pages/Criar_atividades';
 import MinhasAtividades from './pages/MinhasAtividades';
+import EditarAtividade from './pages/EditarAtividade';
 import React from 'react';
 
 export default function App() {
@@ -23,6 +24,7 @@ export default function App() {
         <Route path="/Home_adm" element={<Home_adm />} />
         <Route path="/Criar_atividades" element={<CriarAtividades />} />
         <Route path="/minhas-atividades" element={<MinhasAtividades />} />
+        <Route path="/editar-atividade/:id" element={<EditarAtividade />} />
       </Routes>
     </Router>
   );

@@ -95,6 +95,79 @@ app.post('/atividades', autenticarToken, async (req, res) => {
   res.status(201).send('Atividade criada');
 });
 
+app.get('/atividades/:id', autenticarToken, async (req, res) => {
+  const atividadeId = req.params.id;
+  const usuarioId = req.usuario.id;
+
+  const { rows } = await pool.query(
+    'SELECT * FROM atividades WHERE id = $1 AND usuario_id = $2',
+    [atividadeId, usuarioId]
+  );
+
+  if (rows.length === 0) {
+    return res.status(403).send('Atividade não encontrada ou acesso negado');
+  }
+
+  res.json(rows[0]);
+});
+
+app.put('/atividades/:id', autenticarToken, async (req, res) => {
+  const atividadeId = req.params.id;
+  const usuarioId = req.usuario.id;
+
+  const {
+    textoPrincipal, textoSecundario, imagem,
+    respostas, respostaCerta, categoria, nivelDificuldade
+  } = req.body;
+
+  // Verifica se o usuário é dono da atividade
+  const { rows } = await pool.query(
+    'SELECT usuario_id FROM atividades WHERE id = $1',
+    [atividadeId]
+  );
+
+  if (!rows.length || rows[0].usuario_id !== usuarioId) {
+    return res.status(403).send('Você não pode editar esta atividade');
+  }
+
+  await pool.query(`
+    UPDATE atividades SET
+      texto_principal = $1,
+      texto_secundario = $2,
+      imagem = $3,
+      resposta1 = $4,
+      resposta2 = $5,
+      resposta3 = $6,
+      resposta4 = $7,
+      resposta_certa = $8,
+      categoria = $9,
+      nivel_dificuldade = $10
+    WHERE id = $11
+  `, [
+    textoPrincipal, textoSecundario, imagem,
+    respostas[0], respostas[1], respostas[2], respostas[3],
+    respostaCerta, categoria, nivelDificuldade,
+    atividadeId
+  ]);
+
+  res.send('Atividade atualizada');
+});
+
+app.delete('/atividades/:id', autenticarToken, async (req, res) => {
+  const atividadeId = req.params.id;
+  const usuarioId = req.usuario.id;
+
+  const { rows } = await pool.query('SELECT usuario_id FROM atividades WHERE id = $1', [atividadeId]);
+
+  if (!rows.length || rows[0].usuario_id !== usuarioId) {
+    return res.status(403).send('Você não pode excluir esta atividade');
+  }
+
+  await pool.query('DELETE FROM atividades WHERE id = $1', [atividadeId]);
+  res.send('Atividade excluída com sucesso');
+});
+
+
 app.get('/atividades/minhas', autenticarToken, async (req, res) => {
   const usuarioId = req.usuario.id;
 
@@ -196,8 +269,6 @@ app.get('/atividades/minhas', autenticarToken, async (req, res) => {
   
   
 
-  res.status(201).send('Atividade criada');
-});
 
 
 
