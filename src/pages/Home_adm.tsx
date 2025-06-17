@@ -79,12 +79,7 @@ export default function Home() {
   Criar <br /> Atividades
 </button>
 
-<button
-  onClick={() => navigate('/responder/1')}
-  className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
->
-  Testar Responder Atividade
-</button>
+
 
 
 </div>
