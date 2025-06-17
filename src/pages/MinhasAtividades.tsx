@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 
-const navigate = useNavigate();
+
 interface Atividade {
   id: number;
   texto_principal: string;
@@ -12,6 +12,7 @@ interface Atividade {
 }
 
 export default function MinhasAtividades() {
+  const navigate = useNavigate();
   const [atividades, setAtividades] = useState<Atividade[]>([]);
   const [erro, setErro] = useState<string | null>(null);
 

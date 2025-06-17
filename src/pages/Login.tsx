@@ -23,7 +23,7 @@ export default function Login() {
       if (data.isOrientador) {
         navigate('/Home_adm');
       } else {
-        navigate('/');
+        navigate('/Home');
       }
     } else {
       alert('Usuário ou senha incorretos');

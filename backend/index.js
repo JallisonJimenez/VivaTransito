@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import pg from 'pg';
 import dotenv from 'dotenv';
-import jwt from 'jsonwebtoken';
+
 
   
 
@@ -97,19 +97,26 @@ app.post('/atividades', autenticarToken, async (req, res) => {
 
 app.get('/atividades/:id', autenticarToken, async (req, res) => {
   const atividadeId = req.params.id;
-  const usuarioId = req.usuario.id;
 
   const { rows } = await pool.query(
-    'SELECT * FROM atividades WHERE id = $1 AND usuario_id = $2',
-    [atividadeId, usuarioId]
+    'SELECT * FROM atividades WHERE id = $1',
+    [atividadeId]
   );
 
-  if (rows.length === 0) {
-    return res.status(403).send('Atividade não encontrada ou acesso negado');
+  if (!rows.length) {
+    return res.status(404).send('Atividade não encontrada');
   }
 
+  res.json(rows[0]); // Agora qualquer usuário logado pode ver
+});
+
+app.get('/atividades/publica/:id', async (req, res) => {
+  const { id } = req.params;
+  const { rows } = await pool.query('SELECT * FROM atividades WHERE id = $1', [id]);
+  if (!rows.length) return res.status(404).send('Atividade não encontrada');
   res.json(rows[0]);
 });
+
 
 app.put('/atividades/:id', autenticarToken, async (req, res) => {
   const atividadeId = req.params.id;
@@ -249,24 +256,23 @@ app.get('/atividades/minhas', autenticarToken, async (req, res) => {
     res.json({ acertou });
   });
 
-  
-  app.get('/progresso/:usuarioId', async (req, res) => {
-    const { usuarioId } = req.params;
+  app.get('/progresso', autenticarToken, async (req, res) => {
+    const usuarioId = req.usuario.id;
   
     const { rows } = await pool.query(`
       SELECT 
         a.categoria,
+        a.nivel_dificuldade,
         COUNT(*) FILTER (WHERE r.acertou) AS acertos,
         COUNT(*) FILTER (WHERE NOT r.acertou) AS erros
       FROM resultados r
       JOIN atividades a ON r.atividade_id = a.id
       WHERE r.usuario_id = $1
-      GROUP BY a.categoria
+      GROUP BY a.categoria, a.nivel_dificuldade
     `, [usuarioId]);
   
     res.json(rows);
   });
-  
   
 
 

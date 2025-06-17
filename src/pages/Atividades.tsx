@@ -10,6 +10,8 @@ const atividadesPorCategoria = {
 export default function Atividades() {
   const [aberto, setAberto] = useState<string | null>(null);
   const navigate = useNavigate();
+  fetch(`http://localhost:3001/atividades/publica/1`)
+
 
   const toggleCategoria = (categoria: string) => {
     setAberto(aberto === categoria ? null : categoria);
