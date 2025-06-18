@@ -1,7 +1,7 @@
 {
     "name": "Viva Trânsito",
     "version": "1.0.0",
-    "type": "module", 
+    "type": "module",
     "private": true,
     "scripts": {
         "dev": "vite",
@@ -9,6 +9,7 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "multer": "^2.0.1",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-router-dom": "^6.22.2",

@@ -35,6 +35,25 @@ function autenticarToken(req, res, next) {
 }
 
 
+const multer = require('multer');
+const path = require('path');
+
+// Configuração de destino e nome dos arquivos
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'Images/'); // pasta onde os arquivos ficarão
+  },
+  filename: (req, file, cb) => {
+    const uniqueName = Date.now() + '-' + file.originalname;
+    cb(null, uniqueName);
+  }
+});
+
+const upload = multer({ storage });
+
+app.use('/Images', express.static('Images'));
+
+
 // Cadastro
 app.post('/cadastro', async (req, res) => {
   const { username, password, email, isOrientador, cpf, telefone, foto } = req.body;
@@ -72,13 +91,14 @@ app.post('/login', async (req, res) => {
   }
 });
 
-app.post('/atividades', autenticarToken, async (req, res) => {
+app.post('/atividades', autenticarToken, upload.single('imagem'), async (req, res) => {
   const {
-    textoPrincipal, textoSecundario, imagem,
+    textoPrincipal, textoSecundario,
     respostas, respostaCerta, categoria, nivelDificuldade
   } = req.body;
 
-  const usuarioId = req.usuario.id; // 🔐 pega do token
+  const usuarioId = req.usuario.id;
+  const imagem = req.file ? req.file.filename : null; // nome do arquivo salvo
 
   await pool.query(`
     INSERT INTO atividades (
@@ -92,7 +112,7 @@ app.post('/atividades', autenticarToken, async (req, res) => {
     respostaCerta, categoria, nivelDificuldade
   ]);
 
-  res.status(201).send('Atividade criada');
+  res.status(201).send('Atividade criada com sucesso');
 });
 
 app.get('/atividades/minhas', autenticarToken, async (req, res) => {
