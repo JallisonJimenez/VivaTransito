@@ -202,6 +202,8 @@ app.delete('/atividades/:id', autenticarToken, async (req, res) => {
     return res.status(403).send('Você não pode excluir esta atividade');
   }
 
+  await pool.query('DELETE FROM resultados WHERE atividade_id = $1', [atividadeId]);
+
   await pool.query('DELETE FROM atividades WHERE id = $1', [atividadeId]);
   res.send('Atividade excluída com sucesso');
 });
@@ -525,6 +527,9 @@ app.get('/prova/:id/questoes', autenticarToken, async (req, res) => {
   app.post('/responder', async (req, res) => {
     const { usuarioId, atividadeId, resposta } = req.body;
   
+
+
+    
     // Verifica se já respondeu
     const { rows } = await pool.query(
       'SELECT * FROM resultados WHERE usuario_id = $1 AND atividade_id = $2',

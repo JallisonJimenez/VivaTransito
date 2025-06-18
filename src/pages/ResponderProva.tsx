@@ -71,6 +71,7 @@ export default function ResponderProva() {
 
   return (
     <div className="p-6 max-w-xl mx-auto">
+        
       <h2 className="text-xl font-bold mb-4">Questão {indice + 1}</h2>
       <p className="mb-4">{q.texto_principal}</p>
       {[1, 2, 3, 4].map((i) => (
@@ -87,6 +88,7 @@ export default function ResponderProva() {
         </label>
       ))}
       <button
+      
         onClick={responder}
         className="mt-4 bg-green-600 text-white px-4 py-2 rounded"
       >
