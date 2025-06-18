@@ -13,9 +13,10 @@ export default function Atividades() {
   const [atividades, setAtividades] = useState<Atividade[]>([]);
   const [aberto, setAberto] = useState<string | null>(null);
   const navigate = useNavigate();
+  const atividadesFiltradas = atividades.filter(a => a.categoria !== "Prova");
 
   // Agrupa atividades por categoria
-  const atividadesPorCategoria = atividades.reduce<Record<string, Atividade[]>>((acc, atividade) => {
+  const atividadesPorCategoria = atividadesFiltradas.reduce<Record<string, Atividade[]>>((acc, atividade) => {
     if (!acc[atividade.categoria]) {
       acc[atividade.categoria] = [];
     }
