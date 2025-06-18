@@ -85,6 +85,13 @@ export default function Home() {
           </div>
         </div>
       </div>
+      {/* Botão fixo no canto inferior direito */}
+      <button
+        onClick={() => navigate('/feedback')}
+        className="fixed bottom-4 right-4 bg-blue-600 text-white px-4 py-2 rounded-full shadow-md hover:bg-blue-700 transition"
+      >
+        Deixe seu feedback!
+      </button>
 
       {/* Conteúdo principal */}
       <div className="max-w-screen-lg mx-auto mt-12 px-4 grid grid-cols-1 md:grid-cols-2 gap-12 items-start">

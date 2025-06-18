@@ -35,8 +35,8 @@ function autenticarToken(req, res, next) {
 }
 
 
-const multer = require('multer');
-const path = require('path');
+import multer from 'multer';
+import path from 'path';
 
 // Configuração de destino e nome dos arquivos
 const storage = multer.diskStorage({

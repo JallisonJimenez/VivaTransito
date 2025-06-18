@@ -18,6 +18,7 @@ import RegrasTransito from './pages/RegrasTransito';
 import Sinalizacao from './pages/Sinalizacao';
 import ResponderProva from './pages/ResponderProva';
 import MinhasProvas from './pages/MinhasProvas';
+import Feedback from './pages/feedback';
 
 
 
@@ -45,6 +46,7 @@ export default function App() {
         <Route path="/sinalizacao" element={<Sinalizacao />} />
         <Route path="/responder-prova/:id" element={<ResponderProva />} />
         <Route path="/minhas_provas" element={<MinhasProvas />} />
+        <Route path="/feedback" element={<Feedback />} />
       </Routes>
     </Router>
   );
