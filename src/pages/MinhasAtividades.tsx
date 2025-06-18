@@ -66,8 +66,26 @@ export default function MinhasAtividades() {
   if (erro) return <div className="p-6 text-red-600">{erro}</div>;
 
   return (
+    <div className="min-h-screen bg-white p-6">
+      <div className="flex justify-end">
+        <button
+          onClick={() => navigate(-1)}
+          className="mb-4 px-4 py-2 border rounded hover:bg-gray-100"
+        >
+          Voltar
+        </button>
+      </div>
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Minhas Atividades</h1>
+      <div className="flex gap-4 mb-4">
+  <button
+    onClick={() => navigate('/criar_atividades')}
+    className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+  >
+    Criar Atividade
+  </button>
+</div>
+
       {atividades.length === 0 ? (
         <p className="text-gray-600">Nenhuma atividade encontrada.</p>
       ) : (
@@ -83,7 +101,7 @@ export default function MinhasAtividades() {
 
     <div className="flex gap-4 mt-2">
       <button
-        onClick={() => navigate(`/editar-atividade/${a.id}`)}
+        onClick={() => navigate(`/editar_atividade/${a.id}`)}
         className="text-blue-600 underline text-sm"
       >
         Editar
@@ -102,6 +120,7 @@ export default function MinhasAtividades() {
       </ul>
       
       )}
+    </div>
     </div>
   );
 }

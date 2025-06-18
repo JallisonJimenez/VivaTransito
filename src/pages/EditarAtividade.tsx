@@ -60,7 +60,7 @@ export default function EditarAtividade() {
 
     if (res.ok) {
       alert("✅ Atividade atualizada!");
-      navigate("/minhas-atividades");
+      navigate("/minhas_atividades");
     } else {
       alert("Erro ao atualizar atividade.");
     }
@@ -80,6 +80,16 @@ export default function EditarAtividade() {
   if (erro) return <div className="p-4 text-red-600">{erro}</div>;
 
   return (
+    <div className="min-h-screen bg-white p-6">
+      <div className="flex justify-end">
+        <button
+          onClick={() => navigate(-1)}
+          className="mb-4 px-4 py-2 border rounded hover:bg-gray-100"
+        >
+          Voltar
+        </button>
+      </div>
+      
     <div className="p-6 max-w-2xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Editar Atividade</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -132,6 +142,7 @@ export default function EditarAtividade() {
           Salvar Alterações
         </button>
       </form>
+    </div>
     </div>
   );
 }

@@ -95,6 +95,18 @@ app.post('/atividades', autenticarToken, async (req, res) => {
   res.status(201).send('Atividade criada');
 });
 
+app.get('/atividades/minhas', autenticarToken, async (req, res) => {
+  const usuarioId = req.usuario.id;
+
+  const result = await pool.query(
+    'SELECT * FROM atividades WHERE usuario_id = $1 ORDER BY id DESC',
+    [usuarioId]
+  );
+
+  res.json(result.rows);
+});
+
+
 app.get('/atividades/:id', autenticarToken, async (req, res) => {
   const atividadeId = req.params.id;
 
@@ -175,16 +187,6 @@ app.delete('/atividades/:id', autenticarToken, async (req, res) => {
 });
 
 
-app.get('/atividades/minhas', autenticarToken, async (req, res) => {
-  const usuarioId = req.usuario.id;
-
-  const result = await pool.query(
-    'SELECT * FROM atividades WHERE usuario_id = $1 ORDER BY id DESC',
-    [usuarioId]
-  );
-
-  res.json(result.rows);
-});
 
 
   app.put('/atividades/:id', async (req, res) => {
@@ -272,6 +274,23 @@ app.get('/atividades/minhas', autenticarToken, async (req, res) => {
     res.json({ acertou });
   });
   
+  app.post('/provas/data', autenticarToken, async (req, res) => {
+    const { provaId, data } = req.body;
+    const usuarioId = req.usuario.id;
+  
+    try {
+      await pool.query(
+        'INSERT INTO datas_prova (usuario_id, prova_id, data_prova) VALUES ($1, $2, $3)',
+        [usuarioId, provaId, data]
+      );
+      res.send("Data da prova salva com sucesso.");
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Erro ao salvar data.");
+    }
+  });
+  
+
   app.delete('/revisar/:usuarioId', autenticarToken, async (req, res) => {
     const { usuarioId } = req.params;
   

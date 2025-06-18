@@ -24,13 +24,15 @@ export default function ResponderAtividade() {
   const enviarResposta = async () => {
     if (respostaSelecionada === null) return alert("Escolha uma alternativa.");
 
+    const token = localStorage.getItem("token");
+const decoded = JSON.parse(atob(token!.split(".")[1]));
     const res = await fetch("http://localhost:3001/responder", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        usuarioId: atividade.usuario_id, // ou vindo do token decodificado
+        usuarioId: decoded.id, // ✅ Correto
         atividadeId: atividade.id,
         resposta: respostaSelecionada,
       }),

@@ -73,11 +73,12 @@ export default function Home() {
   Meu <br /> Progresso
 </button>
 <button
-  onClick={() => navigate('/criar_atividades')}
-  className="bg-purple-600 text-white font-bold text-xl rounded-md px-4 py-20 hover:bg-purple-700 "
+  onClick={() => navigate('/minhas_atividades')}
+  className="bg-purple-600 text-white font-bold text-xl rounded-md px-4 py-20 hover:bg-purple-700"
 >
-  Criar <br /> Atividades
+  Minhas <br /> Atividades
 </button>
+
 
 
 
