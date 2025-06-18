@@ -80,7 +80,7 @@ export default function OrgaoTransito() {
       </div>
 
       <button
-        onClick={() => navigate('/')}
+        onClick={() => navigate(-1)}
         className="mt-10 bg-yellow-600 text-white px-5 py-3 rounded hover:bg-yellow-700 font-semibold transition"
       >
         ← Voltar à Home

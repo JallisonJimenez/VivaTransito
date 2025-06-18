@@ -18,6 +18,7 @@ import RegrasTransito from './pages/RegrasTransito';
 import Sinalizacao from './pages/Sinalizacao';
 
 
+
 export default function App() {
   return (
     <Router>
