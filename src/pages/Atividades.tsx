@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 interface Atividade {
   id: number;
-  nome: string;
+  texto_principal: string;
   categoria: string;
   dificuldade?: string;
   // outros campos...
@@ -59,14 +59,14 @@ export default function Atividades() {
             onClick={() => toggleCategoria(categoria)}
             className="w-full text-left px-4 py-3 bg-gray-200 font-semibold"
           >
-            🍔 {categoria}
+                        📂 {categoria}
           </button>
           {aberto === categoria && (
             <div className="p-4">
               <ul>
                 {atividades.map((atividade) => (
                   <li key={atividade.id} className="mb-2">
-                    <span className="block font-medium">{atividade.nome}</span>
+                    <span className="block font-medium">{atividade.texto_principal}</span>
                     <button
   onClick={() => navigate(`/responder/${atividade.id}`)}
   className="mt-1 text-sm text-blue-600 underline"
