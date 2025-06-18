@@ -12,7 +12,7 @@ export default function Progresso() {
 
     
     
-    const revisarAtividades = async () => {
+    const revisarAtividades = async (categoria: string) => {
       const token = localStorage.getItem("token");
       if (!token) return alert("Você precisa estar logado.");
     
@@ -20,7 +20,7 @@ export default function Progresso() {
       const usuarioId = decodedToken.id;
     
       try {
-        const res = await fetch(`http://localhost:3001/revisar/${usuarioId}`, {
+        const res = await fetch(`http://localhost:3001/revisar/${usuarioId}?categoria=${encodeURIComponent(categoria)}`, {
           method: 'DELETE',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -34,7 +34,7 @@ export default function Progresso() {
           return;
         }
     
-        alert("Progresso reiniciado. Você pode refazer as atividades.");
+        alert(`Progresso reiniciado para categoria "${categoria}". Você pode refazer as atividades.`);
         window.location.reload();
       } catch (err) {
         console.error("Erro na requisição:", err);
@@ -150,9 +150,7 @@ export default function Progresso() {
               </ResponsiveContainer>
               <Button
   className="mt-4"
-  onClick={() => revisarAtividades()
-    
-  }
+  onClick={() => revisarAtividades(title)}
 >
   Revisar
 </Button>

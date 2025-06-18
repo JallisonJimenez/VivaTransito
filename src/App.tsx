@@ -16,6 +16,9 @@ import DirecaoDefensiva from './pages/DirecaoDefensiva';
 import OrgaoTransito from './pages/OrgaoTransito';
 import RegrasTransito from './pages/RegrasTransito';
 import Sinalizacao from './pages/Sinalizacao';
+import ResponderProva from './pages/ResponderProva';
+import MinhasProvas from './pages/MinhasProvas';
+
 
 
 
@@ -40,6 +43,8 @@ export default function App() {
         <Route path="/orgao-transito" element={<OrgaoTransito />} />
         <Route path="/regras-transito" element={<RegrasTransito />} />
         <Route path="/sinalizacao" element={<Sinalizacao />} />
+        <Route path="/responder-prova/:id" element={<ResponderProva />} />
+        <Route path="/minhas_provas" element={<MinhasProvas />} />
       </Routes>
     </Router>
   );
