@@ -41,9 +41,15 @@ export default function Home() {
       <div className="max-w-screen-lg mx-auto mt-12 px-4 grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
         {/* Lado Esquerdo */}
         <div className="flex flex-col gap-4">
-          {['Regras de Transito', 'Direção Defensiva', 'Sinalização', 'Órgãos de Transito'].map((text) => (
+           {[
+            { text: 'Regras de Transito', route: '/regras-transito' },
+            { text: 'Direção Defensiva', route: '/direcao-defensiva' },
+            { text: 'Sinalização', route: '/sinalizacao' },
+            { text: 'Órgãos de Transito', route: '/orgao-transito' }
+          ].map(({ text, route }) => (
             <button
               key={text}
+              onClick={() => navigate(route)}
               className="bg-gray-300 text-black px-6 py-4 rounded-md text-lg text-left hover:bg-gray-400 transition"
             >
               {text}

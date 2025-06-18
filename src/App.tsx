@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React from 'react';
 import Home from './pages/Home';
 import Atividades from './pages/Atividades';
 import Login from './pages/Login';
@@ -11,7 +12,11 @@ import MinhasAtividades from './pages/MinhasAtividades';
 import EditarAtividade from './pages/EditarAtividade';
 import ResponderAtividade from './pages/ResponderAtividade';
 import Home_user from './pages/Home_user';
-import React from 'react';
+import DirecaoDefensiva from './pages/DirecaoDefensiva';
+import OrgaoTransito from './pages/OrgaoTransito';
+import RegrasTransito from './pages/RegrasTransito';
+import Sinalizacao from './pages/Sinalizacao';
+
 
 export default function App() {
   return (
@@ -29,7 +34,11 @@ export default function App() {
         <Route path="/editar_atividade/:id" element={<EditarAtividade />} />
         <Route path="/responder/:id" element={<ResponderAtividade />} />
         <Route path="/Home" element={<Home_user />} />
-
+        <Route path="/" element={<Home />} />
+        <Route path="/direcao-defensiva" element={<DirecaoDefensiva />} />
+        <Route path="/orgao-transito" element={<OrgaoTransito />} />
+        <Route path="/regras-transito" element={<RegrasTransito />} />
+        <Route path="/sinalizacao" element={<Sinalizacao />} />
       </Routes>
     </Router>
   );
