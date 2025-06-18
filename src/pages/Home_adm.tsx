@@ -5,6 +5,46 @@ import React from 'react';
 export default function Home() {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
+  const handleSearch = () => {
+    const termo = search.toLowerCase();
+
+    if (
+      termo.includes('placa') ||
+      termo.includes('sinal') ||
+      termo.includes('sinalização') ||
+      termo.includes('sinalizacao') ||
+      termo.includes('parar') ||
+      termo.includes('trânsito') ||
+      termo.includes('transito')
+    ) {
+      navigate('/sinalizacao');
+    } else if (
+      termo.includes('defensiva') ||
+      termo.includes('direção') ||
+      termo.includes('direcao') ||
+      termo.includes('atitude')
+    ) {
+      navigate('/direcao-defensiva');
+    } else if (
+      termo.includes('regras') ||
+      termo.includes('conduta') ||
+      termo.includes('infração') ||
+      termo.includes('infracao')
+    ) {
+      navigate('/regras-transito');
+    } else if (
+      termo.includes('detran') ||
+      termo.includes('órgãos') ||
+      termo.includes('orgaos') ||
+      termo.includes('orgao') ||
+      termo.includes('autoridade') ||
+      termo.includes('prf')
+    ) {
+      navigate('/orgao-transito');
+    } else {
+      alert('Conteúdo não encontrado. Tente outro termo.');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -21,27 +61,35 @@ export default function Home() {
             className="bg-transparent outline-none w-full"
           />
           {search && (
-            <button onClick={() => setSearch('')} className="ml-2 text-xl">❌</button>
+            <>
+              <button onClick={handleSearch} className="ml-2 text-xl">🔎</button>
+              <button onClick={() => setSearch('')} className="ml-2 text-xl">❌</button>
+            </>
           )}
         </div>
 
-        {/* Botões de login */}
+        {/* Botões de login e sair */}
         <div className="flex items-center gap-4">
-
+          <button
+            onClick={() => navigate('/')}
+            className="bg-white border border-black px-3 py-1 rounded-md hover:bg-gray-300 transition"
+          >
+            Sair
+          </button>
           <div
-            
             className="w-10 h-10 border border-black rounded-full flex items-center justify-center text-2xl cursor-pointer"
           >
             👤
           </div>
         </div>
+
       </div>
 
       {/* Conteúdo principal */}
       <div className="max-w-screen-lg mx-auto mt-12 px-4 grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
         {/* Lado Esquerdo */}
         <div className="flex flex-col gap-4">
-           {[
+          {[
             { text: 'Regras de Transito', route: '/regras-transito' },
             { text: 'Direção Defensiva', route: '/direcao-defensiva' },
             { text: 'Sinalização', route: '/sinalizacao' },
@@ -72,25 +120,25 @@ export default function Home() {
             Minhas <br /> Provas
           </button>
 
-<button
-  onClick={() => navigate('/progresso')}
-  className="bg-red-600 text-white font-bold text-xl rounded-md px-4 py-20 hover:bg-red-700 "
->
-  Meu <br /> Progresso
-</button>
-<button
-  onClick={() => navigate('/minhas_atividades')}
-  className="bg-purple-600 text-white font-bold text-xl rounded-md px-4 py-20 hover:bg-purple-700"
->
-  Minhas <br /> Atividades
-</button>
+          <button
+            onClick={() => navigate('/progresso')}
+            className="bg-red-600 text-white font-bold text-xl rounded-md px-4 py-20 hover:bg-red-700 "
+          >
+            Meu <br /> Progresso
+          </button>
+          <button
+            onClick={() => navigate('/minhas_atividades')}
+            className="bg-purple-600 text-white font-bold text-xl rounded-md px-4 py-20 hover:bg-purple-700"
+          >
+            Minhas <br /> Atividades
+          </button>
 
 
 
 
 
-</div>
-</div>
-</div>
-);
+        </div>
+      </div>
+    </div>
+  );
 }
