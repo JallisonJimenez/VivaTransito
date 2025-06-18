@@ -3,17 +3,10 @@ import { useNavigate } from 'react-router-dom';
 
 interface Atividade {
   id: number;
-  usuario_id: number;
   texto_principal: string;
-  texto_secundario?: string;
-  imagem?: string;
-  resposta1: string;
-  resposta2: string;
-  resposta3: string;
-  resposta4: string;
-  resposta_certa: number;
   categoria: string;
-  nivel_dificuldade: 'fácil' | 'médio' | 'difícil';
+  dificuldade?: string;
+  // outros campos...
 }
 
 export default function Atividades() {
@@ -21,7 +14,7 @@ export default function Atividades() {
   const [aberto, setAberto] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  // Agrupa por categoria
+  // Função para agrupar por categoria
   const atividadesPorCategoria = atividades.reduce<Record<string, Atividade[]>>((acc, atividade) => {
     if (!acc[atividade.categoria]) {
       acc[atividade.categoria] = [];
@@ -66,22 +59,21 @@ export default function Atividades() {
             onClick={() => toggleCategoria(categoria)}
             className="w-full text-left px-4 py-3 bg-gray-200 font-semibold"
           >
-            📚 {categoria}
+                        📂 {categoria}
           </button>
           {aberto === categoria && (
             <div className="p-4">
               <ul>
-                {lista.map((atividade) => (
-                  <li key={atividade.id} className="mb-4 border-b pb-2">
-                    <span className="block font-medium text-lg">{atividade.texto_principal}</span>
-                    <span className="text-sm text-gray-600">Nível: {atividade.nivel_dificuldade}</span>
-                    <br />
+                {atividades.map((atividade) => (
+                  <li key={atividade.id} className="mb-2">
+                    <span className="block font-medium">{atividade.texto_principal}</span>
                     <button
-                      onClick={() => navigate(`/responder/${atividade.id}`)}
-                      className="mt-2 text-sm text-blue-600 underline"
-                    >
-                      Acessar
-                    </button>
+  onClick={() => navigate(`/responder/${atividade.id}`)}
+  className="mt-1 text-sm text-blue-600 underline"
+>
+  Acessar
+</button>
+
                   </li>
                 ))}
               </ul>
