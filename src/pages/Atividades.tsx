@@ -23,6 +23,13 @@ export default function Atividades() {
     acc[atividade.categoria].push(atividade);
     return acc;
   }, {});
+        {/* Botão fixo no canto inferior direito */}
+      <button
+        onClick={() => navigate('/feedback')}
+        className="fixed bottom-4 right-4 bg-blue-600 text-white px-4 py-2 rounded-full shadow-md hover:bg-blue-700 transition"
+      >
+        Deixe seu feedback!
+      </button>
 
   useEffect(() => {
     async function fetchAtividades() {
@@ -68,8 +75,8 @@ export default function Atividades() {
                 {atividades.map((atividade) => (
                   <li key={atividade.id} className="mb-2">
                     <span className="block font-medium">{atividade.texto_principal}</span>
-                    <span className="text-sm text-gray-600"> Dificuldade: {atividade.nivel_dificuldade+ " "}
-    </span>
+                    <span className="text-sm text-gray-600"> Dificuldade: {atividade.nivel_dificuldade + " "}
+                    </span>
                     <button
                       onClick={() => navigate(`/responder/${atividade.id}`)}
                       className="mt-1 text-sm text-blue-600 underline"
