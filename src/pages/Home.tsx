@@ -85,8 +85,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      {/* Botão fixo no canto inferior direito */}
-     
+
 
       {/* Conteúdo principal */}
       <div className="max-w-screen-lg mx-auto mt-12 px-4 grid grid-cols-1 md:grid-cols-2 gap-12 items-start">

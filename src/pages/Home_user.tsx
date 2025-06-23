@@ -104,8 +104,7 @@ export default function Home() {
             </button>
           ))}
         </div>
-         {/* Botão fixo no canto inferior direito */}
-      
+         
 
         {/* Lado Direito */}
         <div className="grid grid-cols-2 gap-4">
