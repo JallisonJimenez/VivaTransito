@@ -88,6 +88,12 @@ const decoded = JSON.parse(atob(token!.split(".")[1]));
           {resultado}
         </p>
       )}
+       <button
+        onClick={() => navigate('/feedback')}
+        className="fixed bottom-4 right-4 bg-blue-600 text-white px-4 py-2 rounded-full shadow-md hover:bg-blue-700 transition"
+      >
+        Deixe seu feedback!
+      </button>
     </div>
   );
   }

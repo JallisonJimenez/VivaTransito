@@ -24,6 +24,7 @@ export default function CriarAtividades() {
     const file = e.target.files?.[0] || null;
     setForm({ ...form, imagem: file });
   };
+const maxLenght = 100;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,10 +74,10 @@ export default function CriarAtividades() {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Texto Principal */}
           <div>
-            <label className="block font-medium mb-1">Texto Principal</label>
+            <label className="block font-medium mb-1">Título</label>
             <textarea
               className="w-full border rounded p-2"
-              rows={3}
+              rows={1}
               value={form.textoPrincipal}
               onChange={(e) => setForm({ ...form, textoPrincipal: e.target.value })}
               required
@@ -85,12 +86,14 @@ export default function CriarAtividades() {
 
           {/* Texto Secundário */}
           <div>
-            <label className="block font-medium mb-1">Texto Secundário (opcional)</label>
+            <label className="block font-medium mb-1">Pergunta</label>
             <textarea
               className="w-full border rounded p-2"
-              rows={2}
+           
+              rows={1}
               value={form.textoSecundario}
               onChange={(e) => setForm({ ...form, textoSecundario: e.target.value })}
+              required
             />
           </div>
 
