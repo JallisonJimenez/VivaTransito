@@ -3,45 +3,34 @@ import { useState } from 'react';
 import React from 'react';
 import { useUser } from '../hooks/useUser';
 
-
-export default function Home() {
+export default function Home_user() {
   const navigate = useNavigate();
-  const { isOrientador, verified } = useUser();
   const [search, setSearch] = useState('');
+  const { isOrientador, verified } = useUser();
+
   const handleSearch = () => {
     const termo = search.toLowerCase();
 
     if (
-      termo.includes('placa') ||
-      termo.includes('sinal') ||
-      termo.includes('sinalização') ||
-      termo.includes('sinalizacao') ||
-      termo.includes('parar') ||
-      termo.includes('trânsito') ||
+      termo.includes('placa') || termo.includes('sinal') || termo.includes('sinalização') ||
+      termo.includes('sinalizacao') || termo.includes('parar') || termo.includes('trânsito') ||
       termo.includes('transito')
     ) {
       navigate('/sinalizacao');
     } else if (
-      termo.includes('defensiva') ||
-      termo.includes('direção') ||
-      termo.includes('direcao') ||
-      termo.includes('atitude')
+      termo.includes('defensiva') || termo.includes('direção') ||
+      termo.includes('direcao') || termo.includes('atitude')
     ) {
       navigate('/direcao-defensiva');
     } else if (
-      termo.includes('regras') ||
-      termo.includes('conduta') ||
-      termo.includes('infração') ||
-      termo.includes('infracao')
+      termo.includes('regras') || termo.includes('conduta') ||
+      termo.includes('infração') || termo.includes('infracao')
     ) {
       navigate('/regras-transito');
     } else if (
-      termo.includes('detran') ||
-      termo.includes('órgãos') ||
-      termo.includes('orgaos') ||
-      termo.includes('orgao') ||
-      termo.includes('autoridade') ||
-      termo.includes('prf')
+      termo.includes('detran') || termo.includes('órgãos') ||
+      termo.includes('orgaos') || termo.includes('orgao') ||
+      termo.includes('autoridade') || termo.includes('prf')
     ) {
       navigate('/orgao-transito');
     } else {
@@ -53,7 +42,6 @@ export default function Home() {
     <div className="min-h-screen bg-white">
       {/* Header */}
       <div className="bg-gray-400 flex items-center justify-between p-4">
-       {/* Campo de pesquisa */}
         <div className="flex items-center bg-white rounded-md px-3 py-2 w-1/2 max-w-md border border-black">
           <span className="mr-2 text-xl">🔍</span>
           <input
@@ -73,40 +61,36 @@ export default function Home() {
 
         {/* Botões de login e sair */}
         <div className="flex items-center gap-4">
-        <button
-  onClick={() => {
-    localStorage.removeItem("token"); // remove o token do localStorage
-    navigate('/'); // redireciona para a Home pública
-  }}
-  className="bg-white border border-black px-3 py-1 rounded-md hover:bg-gray-300 transition"
->
-  Sair
-</button>
-
-          <div
-            className="w-10 h-10 border border-black rounded-full flex items-center justify-center text-2xl cursor-pointer"
+          <button
+            onClick={() => {
+              localStorage.removeItem('token');
+              navigate('/');
+            }}
+            className="bg-white border border-black px-3 py-1 rounded-md hover:bg-gray-300 transition"
           >
+            Sair
+          </button>
+          <div className="w-10 h-10 border border-black rounded-full flex items-center justify-center text-2xl cursor-pointer">
             👤
           </div>
         </div>
-
       </div>
 
-      {!verified && (
-        <p className="text-red-600 p-4">
-          Sua conta de orientador ainda não foi verificada. Entre em contato com o administrador.
-        </p>
+      {/* ⚠️ Aviso para orientador não verificado */}
+      {isOrientador && !verified && (
+        <div className="bg-yellow-100 text-yellow-800 border border-yellow-300 p-4 m-4 rounded text-sm">
+          Sua conta de orientador ainda não foi verificada. Entre em contato com o administrador para ativação completa.
+        </div>
       )}
 
       {/* Conteúdo principal */}
       <div className="max-w-screen-lg mx-auto mt-12 px-4 grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
-        {/* Lado Esquerdo */}
         <div className="flex flex-col gap-4">
           {[
-            { text: 'Regras de Transito', route: '/regras-transito' },
+            { text: 'Regras de Trânsito', route: '/regras-transito' },
             { text: 'Direção Defensiva', route: '/direcao-defensiva' },
             { text: 'Sinalização', route: '/sinalizacao' },
-            { text: 'Órgãos de Transito', route: '/orgao-transito' }
+            { text: 'Órgãos de Trânsito', route: '/orgao-transito' },
           ].map(({ text, route }) => (
             <button
               key={text}
@@ -117,9 +101,7 @@ export default function Home() {
             </button>
           ))}
         </div>
-         
 
-        {/* Lado Direito */}
         <div className="grid grid-cols-2 gap-4">
           <button
             onClick={() => navigate('/atividades')}
@@ -136,13 +118,9 @@ export default function Home() {
           <button
             onClick={() => navigate('/progresso')}
             className="bg-red-600 text-white font-bold text-xl rounded-md px-4 py-20 hover:bg-red-700 col-span-2"
-
           >
             Meu <br /> Progresso
           </button>
-
-
-
         </div>
       </div>
     </div>
