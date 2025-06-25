@@ -11,41 +11,75 @@ export default function ResponderAtividade() {
   const [erro, setErro] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch(`http://localhost:3001/atividades/${id}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
-      .then((res) => res.ok ? res.json() : Promise.reject("Erro ao carregar atividade"))
-      .then(setAtividade)
-      .catch(setErro);
-  }, [id]);
-
-  const enviarResposta = async () => {
-    if (respostaSelecionada === null) return alert("Escolha uma alternativa.");
-
+    const headers: Record<string,string> = {};
     const token = localStorage.getItem("token");
-const decoded = JSON.parse(atob(token!.split(".")[1]));
+    if (token) headers.Authorization = `Bearer ${token}`;
+  
+    fetch(`http://localhost:3001/atividades/${id}`, { headers })
+      .then(res => {
+        if (!res.ok) throw new Error("Erro ao carregar atividade");
+        return res.json();
+      })
+      .then(setAtividade)
+      .catch(err => setErro(err.message));
+  }, [id]);
+  
+  
+  
+  const enviarResposta = async () => {
+    if (respostaSelecionada === null) {
+      alert("Escolha uma alternativa.");
+      return;
+    }
+  
+    const token = localStorage.getItem("token");
+    let usuarioId: number | null = null;
+  
+    // Se tiver token, decodifica para pegar o id
+    if (token) {
+      try {
+        const decoded = JSON.parse(atob(token.split(".")[1]));
+        usuarioId = decoded.id;
+      } catch (err) {
+        console.error("Token inválido.");
+      }
+    }
+  
+    // Se a atividade não for pública e o usuário não estiver logado
+    if (atividade.usuario_id !== -1 && !usuarioId) {
+      alert("Você precisa estar logado para responder esta atividade.");
+      return;
+    }
+  
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    
+
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+    
     const res = await fetch("http://localhost:3001/responder", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers,
       body: JSON.stringify({
-        usuarioId: decoded.id, // ✅ Correto
+        usuarioId,
         atividadeId: atividade.id,
         resposta: respostaSelecionada,
       }),
     });
     
+  
     if (res.status === 400) {
       setResultado("⚠️ Você já respondeu esta atividade.");
       return;
     }
-    
+  
     const json = await res.json();
     setResultado(json.acertou ? "✅ Você acertou!" : "❌ Você errou.");
   };
+  
 
 
   if (erro) return <div className="p-6 text-red-600">{erro}</div>;

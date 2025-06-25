@@ -1,9 +1,16 @@
 // src/pages/Login.tsx
 import React from 'react';
 import { useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+
 export default function Login() {
+  useEffect(() => {
+    localStorage.removeItem('token'); // evita herança de sessão antiga
+  }, []);
+  
+
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -19,7 +26,15 @@ export default function Login() {
   
     if (res.ok) {
       const data = await res.json();
-      localStorage.setItem('token', data.token);
+      
+        if (data.token) {
+          localStorage.setItem('token', data.token);
+          navigate(data.isOrientador ? '/Home_adm' : '/Home');
+        } else {
+          alert("Erro: token não retornado.");
+        }
+      
+      
       if (data.isOrientador) {
         navigate('/Home_adm');
       } else {
@@ -32,6 +47,7 @@ export default function Login() {
   
 
   return (
+    
     <div className="min-h-screen bg-white p-6">
     <div className="flex justify-end">
         <button

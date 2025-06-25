@@ -30,16 +30,21 @@ const maxLenght = 100;
     e.preventDefault();
 
     const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Você precisa estar logado.");
+      return;
+    }
 
-    const atividade = {
-      textoPrincipal: form.textoPrincipal,
-      textoSecundario: form.textoSecundario,
-      imagem: form.imagem?.name ?? null,
-      respostas: form.respostas,
-      respostaCerta: parseInt(form.respostaCerta),
-      categoria: form.categoria,
-      nivelDificuldade: form.nivelDificuldade,
-    };
+    const formData = new FormData();
+    formData.append("Título", form.textoPrincipal);
+    formData.append("Pergunta", form.textoSecundario);
+    if (form.imagem) formData.append("imagem", form.imagem);
+    form.respostas.forEach((r, i) => formData.append(`resposta${i + 1}`, r));
+    formData.append("respostaCerta", form.respostaCerta);
+    formData.append("categoria", form.categoria);
+    formData.append("nivelDificuldade", form.nivelDificuldade);
+  
+    
 
     const res = await fetch("http://localhost:3001/atividades", {
       method: "POST",
@@ -47,7 +52,7 @@ const maxLenght = 100;
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(atividade),
+      body: formData,
     });
 
     if (res.ok) {

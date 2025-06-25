@@ -70,12 +70,16 @@ export default function Home() {
 
         {/* Botões de login e sair */}
         <div className="flex items-center gap-4">
-          <button
-            onClick={() => navigate('/')}
-            className="bg-white border border-black px-3 py-1 rounded-md hover:bg-gray-300 transition"
-          >
-            Sair
-          </button>
+        <button
+  onClick={() => {
+    localStorage.removeItem("token"); // remove o token do localStorage
+    navigate('/'); // redireciona para a Home pública
+  }}
+  className="bg-white border border-black px-3 py-1 rounded-md hover:bg-gray-300 transition"
+>
+  Sair
+</button>
+
           <div
             className="w-10 h-10 border border-black rounded-full flex items-center justify-center text-2xl cursor-pointer"
           >

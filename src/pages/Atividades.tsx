@@ -31,19 +31,20 @@ export default function Atividades() {
         Deixe seu feedback!
       </button>
 
-  useEffect(() => {
-    async function fetchAtividades() {
-      try {
-        const res = await fetch('http://localhost:3001/atividades');
-        if (!res.ok) throw new Error('Erro ao buscar atividades');
-        const data: Atividade[] = await res.json();
-        setAtividades(data);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    fetchAtividades();
-  }, []);
+useEffect(() => {
+  async function fetchAtividades() {
+    const headers: Record<string,string> = {};
+    const token = localStorage.getItem("token");
+    if (token) headers.Authorization = `Bearer ${token}`;
+
+    const res = await fetch('http://localhost:3001/atividades', { headers });
+    if (!res.ok) throw new Error('Erro ao buscar atividades');
+    const data = await res.json();
+    setAtividades(data);
+  }
+  fetchAtividades();
+}, []);
+
 
   const toggleCategoria = (categoria: string) => {
     setAberto(aberto === categoria ? null : categoria);

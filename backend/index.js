@@ -6,6 +6,7 @@ import pg from 'pg';
 import dotenv from 'dotenv';
 
 
+
   
 
 dotenv.config();
@@ -127,20 +128,41 @@ app.get('/atividades/minhas', autenticarToken, async (req, res) => {
 });
 
 
-app.get('/atividades/:id', autenticarToken, async (req, res) => {
+app.get('/atividades/:id', async (req, res) => {
   const atividadeId = req.params.id;
+  try {
+    const { rows } = await pool.query(
+      'SELECT * FROM atividades WHERE id = $1',
+      [atividadeId]
+    );
+    if (!rows.length) return res.status(404).send('Atividade não encontrada');
+    const atividade = rows[0];
 
-  const { rows } = await pool.query(
-    'SELECT * FROM atividades WHERE id = $1',
-    [atividadeId]
-  );
+    // Pública?
+    if (atividade.usuario_id === -1) {
+      return res.json(atividade);
+    }
 
-  if (!rows.length) {
-    return res.status(404).send('Atividade não encontrada');
+    // Caso contrário, exige token válido
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return res.status(401).send('Você precisa estar logado para acessar esta atividade');
+    }
+    const token = authHeader.split(' ')[1];
+    jwt.verify(token, process.env.JWT_SECRET);
+    res.json(atividade);
+
+  } catch (err) {
+    console.error(err);
+    if (err.name === 'JsonWebTokenError') {
+      return res.status(403).send('Token inválido');
+    }
+    res.status(500).send('Erro interno do servidor');
   }
-
-  res.json(rows[0]); // Agora qualquer usuário logado pode ver
 });
+
+
+
 
 app.get('/atividades/publica/:id', async (req, res) => {
   const { id } = req.params;
@@ -255,14 +277,30 @@ app.delete('/atividades/:id', autenticarToken, async (req, res) => {
   
 
   app.get('/atividades', async (req, res) => {
-    const categoria = req.query.categoria;
+    const authHeader = req.headers.authorization;
+    let logado = false;
   
-    const result = categoria
-      ? await pool.query('SELECT * FROM atividades WHERE categoria = $1', [categoria])
-      : await pool.query('SELECT * FROM atividades');
+    if (authHeader) {
+      try {
+        jwt.verify(authHeader.split(' ')[1], process.env.JWT_SECRET);
+        logado = true;
+      } catch {}
+    }
   
-    res.json(result.rows);
+    const sql = logado
+      ? 'SELECT * FROM atividades'
+      : 'SELECT * FROM atividades WHERE usuario_id = -1';
+  
+    try {
+      const { rows } = await pool.query(sql);
+      res.json(rows);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Erro ao buscar atividades');
+    }
   });
+  
+  
 
 // POST /provas - cria uma nova prova e 30 atividades
 app.post('/provas', autenticarToken, async (req, res) => {
@@ -522,58 +560,45 @@ app.get('/prova/:id/questoes', autenticarToken, async (req, res) => {
     res.status(500).send('Erro ao buscar questões da prova');
   }
 });
+app.post('/responder', async (req, res) => {
+  const { usuarioId, atividadeId, resposta } = req.body;
 
+  // Busca a atividade
+  const { rows: atividadeRows } = await pool.query(
+    'SELECT usuario_id, resposta_certa FROM atividades WHERE id = $1',
+    [atividadeId]
+  );
+  if (!atividadeRows.length) return res.status(404).send('Atividade não encontrada');
 
-  app.post('/responder', async (req, res) => {
-    const { usuarioId, atividadeId, resposta } = req.body;
-  
+  const { usuario_id, resposta_certa } = atividadeRows[0];
+  const acertou = parseInt(resposta) === resposta_certa;
 
+  // Se a atividade não for pública, exige login
+  if (usuario_id !== -1 && !usuarioId) {
+    return res.status(401).send('Você precisa estar logado para responder esta atividade.');
+  }
 
-    
-    // Verifica se já respondeu
+  // Verifica duplicidade apenas se for usuário logado
+  if (usuarioId) {
     const { rows } = await pool.query(
       'SELECT * FROM resultados WHERE usuario_id = $1 AND atividade_id = $2',
       [usuarioId, atividadeId]
     );
-  
     if (rows.length > 0) {
       return res.status(400).send('Você já respondeu essa atividade.');
     }
-  
-    // Busca resposta correta
-    const { rows: atividadeRows } = await pool.query(
-      'SELECT resposta_certa FROM atividades WHERE id = $1',
-      [atividadeId]
-    );
-  
-    if (!atividadeRows.length) return res.status(404).send('Atividade não encontrada');
-  
-    const respostaCerta = atividadeRows[0].resposta_certa;
-    const acertou = parseInt(resposta) === respostaCerta;
-  
+
     await pool.query(
       'INSERT INTO resultados (usuario_id, atividade_id, acertou) VALUES ($1, $2, $3)',
       [usuarioId, atividadeId, acertou]
     );
-  
-    res.json({ acertou });
-  });
-  
-  app.post('/provas/data', autenticarToken, async (req, res) => {
-    const { provaId, data } = req.body;
-    const usuarioId = req.usuario.id;
-  
-    try {
-      await pool.query(
-        'INSERT INTO datas_prova (usuario_id, prova_id, data_prova) VALUES ($1, $2, $3)',
-        [usuarioId, provaId, data]
-      );
-      res.send("Data da prova salva com sucesso.");
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("Erro ao salvar data.");
-    }
-  });
+  }
+
+  // Retorna o resultado sem salvar para anônimos
+  res.json({ acertou });
+});
+
+
   
 
   app.delete('/revisar/:usuarioId', autenticarToken, async (req, res) => {
