@@ -26,42 +26,36 @@ export default function CriarAtividades() {
   };
 const maxLenght = 100;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+// em CriarAtividades.tsx — handleSubmit:
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  const token = localStorage.getItem("token");
+  const formData = new FormData();
+  formData.append("textoPrincipal", form.textoPrincipal);
+  formData.append("textoSecundario", form.textoSecundario);
+  if (form.imagem) formData.append("imagem", form.imagem);
+  formData.append("respostas", JSON.stringify(form.respostas));
+  formData.append("respostaCerta", form.respostaCerta);
+  formData.append("categoria", form.categoria);
+  formData.append("nivelDificuldade", form.nivelDificuldade);
 
-    const token = localStorage.getItem("token");
-    if (!token) {
-      alert("Você precisa estar logado.");
-      return;
-    }
+  const res = await fetch("http://localhost:3001/atividades", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      // NÃO coloque Content-Type: o navegador vai definir multipart/form-data automaticamente
+    },
+    body: formData,
+  });
 
-    const formData = new FormData();
-    formData.append("Título", form.textoPrincipal);
-    formData.append("Pergunta", form.textoSecundario);
-    if (form.imagem) formData.append("imagem", form.imagem);
-    form.respostas.forEach((r, i) => formData.append(`resposta${i + 1}`, r));
-    formData.append("respostaCerta", form.respostaCerta);
-    formData.append("categoria", form.categoria);
-    formData.append("nivelDificuldade", form.nivelDificuldade);
-  
-    
+  if (res.ok) {
+    alert("✅ Atividade criada com sucesso!");
+    window.location.reload();
+  } else {
+    alert("Erro ao criar atividade");
+  }
+};
 
-    const res = await fetch("http://localhost:3001/atividades", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    });
-
-    if (res.ok) {
-      alert("✅ Atividade criada com sucesso!");
-      window.location.reload();
-    } else {
-      alert("Erro ao criar atividade");
-    }
-  };
 
   return (
     <div className="min-h-screen bg-white p-6">

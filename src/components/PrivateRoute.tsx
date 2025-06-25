@@ -1,5 +1,6 @@
+// src/components/PrivateRoute.tsx
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 
 interface Props {
   children: React.ReactNode;
@@ -7,9 +8,10 @@ interface Props {
 
 export default function PrivateRoute({ children }: Props) {
   const token = localStorage.getItem('token');
+  const isAuthenticated = !!token && token.split('.').length === 3;
+  const location = useLocation();
 
-  // Verifica se o token é válido (existente e no formato JWT)
-  const isAuthenticated = token && token.split('.').length === 3;
-
-  return isAuthenticated ? <>{children}</> : <Navigate to="/login" />;
+  return isAuthenticated
+    ? <>{children}</>
+    : <Navigate to="/login" replace state={{ from: location }} />;
 }

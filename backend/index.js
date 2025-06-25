@@ -7,6 +7,9 @@ import dotenv from 'dotenv';
 
 
 
+
+
+
   
 
 dotenv.config();
@@ -19,6 +22,7 @@ app.get('/', (req, res) => {
 const port = 3001;
 app.use(cors());
 app.use(express.json());
+app.use('/Images', express.static('Images'));
 
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
 
@@ -54,21 +58,123 @@ const upload = multer({ storage });
 
 app.use('/Images', express.static('Images'));
 
+app.post('/feedback', autenticarToken, async (req, res) => {
+  const { comentario, nota } = req.body;
+  const usuarioId = req.usuario.id;
+  if (!comentario || nota == null) {
+    return res.status(400).send('Comentário e nota são obrigatórios');
+  }
+  try {
+    await pool.query(
+      'INSERT INTO feedback (usuario_id, comentario, nota) VALUES ($1, $2, $3)',
+      [usuarioId, comentario, nota]
+    );
+    res.status(201).send('Feedback salvo com sucesso');
+  } catch (err) {
+    console.error('Erro ao salvar feedback:', err);
+    res.status(500).send('Erro interno ao salvar feedback');
+  }
+});
+
+
+
+// POST /atividades/:id/feedback
+app.post('/atividades/:id/feedback', autenticarToken, async (req, res) => {
+  const usuarioId = req.usuario.id;
+  const atividadeId = parseInt(req.params.id, 10);
+  const { comentario, nota } = req.body;
+
+  if (typeof comentario !== 'string' || typeof nota !== 'number') {
+    return res.status(400).send('Dados inválidos');
+  }
+
+  try {
+    await pool.query(`
+      INSERT INTO feedback (usuario_id, atividade_id, comentario, nota)
+      VALUES ($1, $2, $3, $4)
+      ON CONFLICT (usuario_id, atividade_id)
+      DO UPDATE SET
+        comentario = EXCLUDED.comentario,
+        nota       = EXCLUDED.nota
+    `, [usuarioId, atividadeId, comentario, nota]);
+
+    res.send('Feedback salvo com sucesso');
+  } catch (err) {
+    console.error('Erro ao salvar feedback:', err);
+    res.status(500).send('Erro interno ao salvar feedback');
+  }
+});
+
+
+function requireVerifiedOrientador(req, res, next) {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return res.status(401).send('Token obrigatório');
+  let payload;
+  try {
+    payload = jwt.verify(token, process.env.JWT_SECRET);
+  } catch {
+    return res.status(403).send('Token inválido');
+  }
+
+  // Busca flag verified direto no banco
+  pool.query(
+    'SELECT is_orientador, verified FROM usuarios WHERE id = $1',
+    [payload.id]
+  ).then(({ rows }) => {
+    if (!rows.length) return res.status(404).send('Usuário não encontrado');
+    const u = rows[0];
+    if (!u.is_orientador)      return res.status(403).send('Só orientador pode criar');
+    if (!u.verified)           return res.status(403).send('Conta de orientador não verificada');
+    req.usuario = payload;
+    next();
+  }).catch(err => {
+    console.error(err);
+    res.status(500).send('Erro interno');
+  });
+}
+
+
+
 
 // Cadastro
 app.post('/cadastro', async (req, res) => {
   const { username, password, email, isOrientador, cpf, telefone, foto } = req.body;
 
+  // 1) Validações básicas:
+  if (!/^\d{3}\.\d{3}\.\d{3}\-\d{2}$/.test(cpf)) {
+    return res.status(400).send('CPF inválido. Use o formato 000.000.000-00.');
+  }
+  if (!/^\+55\s\(\d{2}\)\s\d{5}\-\d{4}$/.test(telefone)) {
+    return res.status(400).send('Telefone inválido. Use +55 (00) 00000-0000.');
+  }
+  if (
+    password.length < 8 ||
+    !/[A-Z]/.test(password) ||
+    !/[a-z]/.test(password) ||
+    !/[0-9]/.test(password) ||
+    !/[\W_]/.test(password)
+  ) {
+    return res.status(400).send('Senha fraca. Mínimo 8 caracteres, com maiúscula, minúscula, número e especial.');
+  }
+
   try {
+    // 2) Checa CPF duplicado
+    const existe = await pool.query('SELECT 1 FROM usuarios WHERE cpf = $1', [cpf]);
+    if (existe.rowCount) {
+      return res.status(409).send('CPF já cadastrado.');
+    }
+
     const hash = await bcrypt.hash(password, 10);
     await pool.query(
-      'INSERT INTO usuarios (username, password_hash, email,is_orientador, cpf, telefone, foto) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+      `INSERT INTO usuarios
+         (username, password_hash, email, is_orientador, cpf, telefone, foto)
+       VALUES ($1,$2,$3,$4,$5,$6,$7)`,
       [username, hash, email, isOrientador, cpf, telefone, foto]
     );
     res.status(201).send('Usuário cadastrado');
   } catch (err) {
     console.error(err);
-    res.status(400).send('Erro no cadastro');
+    res.status(500).send('Erro no cadastro');
   }
 });
 
@@ -84,7 +190,7 @@ app.post('/login', async (req, res) => {
       return res.status(401).send('Credenciais inválidas');
     }
 
-    const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET);
+    const token = jwt.sign({ id: user.id, username: user.username, isOrientador: user.is_orientador,verified: user.verified}, process.env.JWT_SECRET);
     res.json({ token, isOrientador: user.is_orientador });
   } catch (err) {
     console.error(err);
@@ -92,27 +198,28 @@ app.post('/login', async (req, res) => {
   }
 });
 
-app.post('/atividades', autenticarToken, upload.single('imagem'), async (req, res) => {
-  const {
-    textoPrincipal, textoSecundario,
-    respostas, respostaCerta, categoria, nivelDificuldade
-  } = req.body;
-
+app.post('/atividades', autenticarToken, requireVerifiedOrientador, upload.single('imagem'), async (req, res) => {
+  // req.file → o arquivo
+  // req.body → os campos textoPrincipal, respostas, etc.
   const usuarioId = req.usuario.id;
-  const imagem = req.file ? req.file.filename : null; // nome do arquivo salvo
-
+  const imagem = req.file?.filename ?? null;
+  const respostas = JSON.parse(req.body.respostas); // lembre-se de parsear
   await pool.query(`
-    INSERT INTO atividades (
+    INSERT INTO atividades(
       usuario_id, texto_principal, texto_secundario, imagem,
       resposta1, resposta2, resposta3, resposta4,
       resposta_certa, categoria, nivel_dificuldade
-    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
+    ) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
   `, [
-    usuarioId, textoPrincipal, textoSecundario, imagem,
+    usuarioId,
+    req.body.textoPrincipal,
+    req.body.textoSecundario,
+    imagem,
     respostas[0], respostas[1], respostas[2], respostas[3],
-    respostaCerta, categoria, nivelDificuldade
+    parseInt(req.body.respostaCerta),
+    req.body.categoria,
+    req.body.nivelDificuldade
   ]);
-
   res.status(201).send('Atividade criada com sucesso');
 });
 

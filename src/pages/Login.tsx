@@ -50,8 +50,8 @@ export default function Login() {
     
     <div className="min-h-screen bg-white p-6">
     <div className="flex justify-end">
-        <button
-          onClick={() => navigate(-1)}
+    <button onClick={() => navigate('/', { replace: true })} 
+
           className="mb-4 px-4 py-2 border rounded hover:bg-gray-100"
         >
           Voltar

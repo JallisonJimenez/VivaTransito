@@ -18,8 +18,9 @@ import RegrasTransito from './pages/RegrasTransito';
 import Sinalizacao from './pages/Sinalizacao';
 import ResponderProva from './pages/ResponderProva';
 import MinhasProvas from './pages/MinhasProvas';
-import Feedback from './pages/feedback';
+import Feedback from './pages/FeedbackAtividade';
 import PrivateRoute from './components/PrivateRoute';
+import AdminRoute from './components/AdminRoute';
 
 export default function App() {
   return (
@@ -38,17 +39,20 @@ export default function App() {
         <Route path="/responder/:id" element={<ResponderAtividade />} />
         
         
-        {/* Rotas protegidas */}
-        <Route path="/feedback" element={<PrivateRoute><Feedback /></PrivateRoute>} />
+        {/* Rotas protegidas ALUNO E ORIENTADOR*/}
+        <Route path="/atividades/:id/feedback" element={<PrivateRoute><Feedback /></PrivateRoute> }/>
         <Route path="/home" element={<PrivateRoute><Home_user /></PrivateRoute>} />
         <Route path="/progresso" element={<PrivateRoute><Progresso /></PrivateRoute>} />
         
         <Route path="/responder-prova/:id" element={<PrivateRoute><ResponderProva /></PrivateRoute>} />
-        <Route path="/home_adm" element={<PrivateRoute><Home_adm /></PrivateRoute>} />
-        <Route path="/criar_atividades" element={<PrivateRoute><CriarAtividades /></PrivateRoute>} />
-        <Route path="/minhas_atividades" element={<PrivateRoute><MinhasAtividades /></PrivateRoute>} />
-        <Route path="/editar_atividade/:id" element={<PrivateRoute><EditarAtividade /></PrivateRoute>} />
         <Route path="/minhas_provas" element={<PrivateRoute><MinhasProvas /></PrivateRoute>} />
+ {/* Rotas protegidas ORIENTADOR */}
+
+ <Route path="/home_adm"element={<AdminRoute><Home_adm /></AdminRoute>}/>
+        <Route path="/criar_atividades"element={<AdminRoute><CriarAtividades /></AdminRoute>}/>
+        <Route path="/minhas_atividades"element={<AdminRoute><MinhasAtividades /></AdminRoute> }/>
+        <Route path="/editar_atividade/:id"element={<AdminRoute><EditarAtividade /></AdminRoute>}/>
+
       </Routes>
     </Router>
   );

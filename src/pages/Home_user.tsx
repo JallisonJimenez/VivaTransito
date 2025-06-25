@@ -1,9 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import React from 'react';
+import { useUser } from '../hooks/useUser';
+
 
 export default function Home() {
   const navigate = useNavigate();
+  const { isOrientador, verified } = useUser();
   const [search, setSearch] = useState('');
   const handleSearch = () => {
     const termo = search.toLowerCase();
@@ -88,6 +91,12 @@ export default function Home() {
         </div>
 
       </div>
+
+      {!verified && (
+        <p className="text-red-600 p-4">
+          Sua conta de orientador ainda não foi verificada. Entre em contato com o administrador.
+        </p>
+      )}
 
       {/* Conteúdo principal */}
       <div className="max-w-screen-lg mx-auto mt-12 px-4 grid grid-cols-1 md:grid-cols-2 gap-12 items-start">

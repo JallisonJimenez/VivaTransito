@@ -9,6 +9,7 @@ export default function ResponderAtividade() {
   const [respostaSelecionada, setRespostaSelecionada] = useState<number | null>(null);
   const [resultado, setResultado] = useState<string | null>(null);
   const [erro, setErro] = useState<string | null>(null);
+  const IMAGES_URL = 'http://localhost:3001/Images';
 
   useEffect(() => {
     const headers: Record<string,string> = {};
@@ -93,7 +94,8 @@ export default function ResponderAtividade() {
       <p className="mb-2">{atividade.texto_principal}</p>
       {atividade.texto_secundario && <p className="mb-2 text-gray-600">{atividade.texto_secundario}</p>}
       {atividade.imagem && (
-        <img src={`http://localhost:3001/imagens/${atividade.imagem}`} alt="Imagem" className="mb-4" />
+        <img src={`${IMAGES_URL}/${atividade.imagem}`} alt="Atividade"className="mb-4 w-full h-auto object-contain"
+      />
       )}
 
       {[1, 2, 3, 4].map((num) => (
@@ -123,7 +125,7 @@ export default function ResponderAtividade() {
         </p>
       )}
        <button
-        onClick={() => navigate('/feedback')}
+        onClick={() => navigate(`/atividades/${atividade.id}/feedback`)}
         className="fixed bottom-4 right-4 bg-blue-600 text-white px-4 py-2 rounded-full shadow-md hover:bg-blue-700 transition"
       >
         Deixe seu feedback!
